@@ -4,7 +4,7 @@ let data = {
         data: [
             {
                 email: "",
-                korisnicko_ime: "",
+                korisnickoIme: "",
                 lozinka: "",
             },
         ],
@@ -12,7 +12,7 @@ let data = {
     turniri: {
         data: [
             {
-                korisnicko_ime: "",
+                korisnickoIme: "",
                 datum: null,
                 vrijeme: null,
                 lokacija: "",
