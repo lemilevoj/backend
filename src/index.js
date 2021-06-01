@@ -1,66 +1,60 @@
-import express from 'express';
+
+import express, { response } from 'express';
 import data from './store';
 import cors from 'cors';
 import connect from './db.js';
 import mongo from 'mongodb';
 import auth from './auth.js';
-import dotenv from 'dotenv';
+
+
 require('dotenv').config();
 
 const app = express();
-const port = 4450;
+const port = 3000;
 
 app.use(cors()); // omoguciti cors na svim rutama
 app.use(express.json());
 
-/*
-app.get('/galerija', async (req, res) => {
-    let posts = storage.galerija;
-    let query = req.query;
+app.get('/tajna', (req,res)=>{
+    let ok = auth.verify(req,res);
+    if (!ok){
+        return;
+    }
+    res.json({message: 'Ovo je tajna ' + req.jwt.email});
 })
 
-app.get('galerija', async(req, res) => {
-    let db = await connect()
+app.get('/galerija',  (req, res) => {
+    res.send("rendom okej")
+  
+  })
+  
 
-    let cursor = await db.collection("galerija").find().sort({postedAt: -1})
-    let results = await cursor.toArray()
+  app.post('/registracija', async (req, res) => {
+    let db = await connect();
+    let podaci = req.body;
+    let result = await db.collection('user').insertOne(podaci);
+    if (result.insertedCount == 1) {
+        res.send({
+            status: 'success',
+            id: result.insertedId,
+        });
+    } 
+    else {
+        res.send({
+            status: 'fail',
+        });
+    }
+});
 
-    res.json(results)
+app.get('/registracija',  (req, res) => {
+    let podaci = req.body; 
+
+    res.send(podaci);
 })
-*/
+
 
 app.listen(port, () => console.log(`\n\nhttp://localhost:${port}/\n\n`));
-/* app.get('/korisnici', (req, res) => res.json(data.korisnici));
-app.get('/turniri', (req, res) => res.json(data.turniri));
-app.get('/figure', (req, res) => res.json(data.figure));
-app.get('/galerija', (req, res) => res.json(data.galerija));
 
-app.post('/korisnici', (req, res) => {
-    res.statusCode = 201;
-    res.setHeader('Location', '/korisnici/user_name');
-    res.send();
-});
-
-app.post('/turniri', (req, res) => {
-    res.statusCode = 201;
-    res.setHeader('Location', '/turniri');
-    res.send();
-});
-
-app.post('/figure', (req, res) => {
-    res.statusCode = 201;
-    res.setHeader('Location', '/figure');
-    res.send();
-});
-
-app.post('/galerija', (req, res) => {
-    res.statusCode = 201;
-    res.setHeader('Location', '/galerija');
-    res.send();
-});
-*/
- 
-// unos jednog usera
 
 app.post('/user', async (req , res) =>{
     let user = req.body;
@@ -78,22 +72,25 @@ app.post('/user', async (req , res) =>{
 
 });
 
+
 app.post('/auth', async (req, res) =>{
+
     let user = req.body;
-    let korisnickoIme = user.korisnickoIme;
     let email = user.email;
     let lozinka = user.lozinka;
     try{
        let result = await auth.authenticateuser(email, lozinka);
+       res.json(result);
        res.status(201).json(result);
     }
     catch (e){
         res.status(500).json({error: e.message})
         console.log(error)
     }
+    res.json({id:id});
 })
-
-/* app.patch("/user" , [auth.verify], async (req, res) =>{
+/*
+ app.patch("/user" , [auth.verify], async (req, res) =>{
     let changes = req.body;
 
     let email = req.jwt.email;
@@ -112,6 +109,6 @@ app.post('/auth', async (req, res) =>{
     }
 
 })
+*/
 
-
-app.listen(port, () => console.log(`Slušam na portu ${port}!`)) */
+/*app.listen(port, () => console.log(`Slušam na portu ${port}!`)) */

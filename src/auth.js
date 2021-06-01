@@ -35,18 +35,20 @@ export default {
     
     async authenticateuser(email, lozinka){
         let db = await connect()
-        let user = await db.collection("user").findOne({email: email})
-        if(user && user.lozinka && (await bcrypt.compare(lozinka, user.lozinka))){
+        let user = await db.collection("user").findOne({email:email})
+        console.log("++++++++" + lozinka)
+        console.log("++++++++" + user)
+
+        if(bcrypt.compare(lozinka, user.lozinka)){
+            console.log("---------")
             delete user.lozinka
-            let token = jwt.sign(user, process.env.JWT_SECRET, {
+            let token = jwt.sign(user, "tajna", {
                 algorithm : "HS512",
                 expiresIn: "1 week"
             }) 
             return{
                token,
                email:user.email,
-               lozinka:user.lozinka,
-               korisnickoIme: user.korisnickoIme,
             }
         }
         else{
@@ -54,36 +56,19 @@ export default {
         }
     },
     
-    /* async changeUserPassword(email, old_password, new_password){
-        let db = await connect ()
-        let user = await db.collection("user").findOne({email: email})
 
-        if(user && user.password && (await bcrypt.compare(old_password, user.password))){
-            let new_password_hashed = await bcrypt.hash(new_password, 8)
-
-            let result = await db.collection("user").updateOne(
-                {_id: user._id},
-                {
-                    $set: {
-                        password: new_password_hashed
-                    }
-                }
-            )
-            return result.modifiedCount == 1
-        }
-    }, */
-
-    verify(req, res, next){
+    verify(req, res){
         try{
             let authorization = req.headers.authorization.split(' ');
             let type = authorization[0];
-            let token = authorization[1]
+            let token = authorization[1];
             if(type !== "Bearer"){
-                return res.status(401).send();
+                res.status(401).send();
+                return false;
             }
             else{
-            req.jwt =jwt.verify(token, process.env.JWT_SECRET);
-            return next()
+                req.jwt =jwt.verify(token, 'tajna'/*process.env.JWT_SECRET*/);
+                return true;
             }
         }
         catch(e){
