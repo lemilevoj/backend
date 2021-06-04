@@ -36,7 +36,10 @@ export default {
     async authenticateuser(email, lozinka){
         let db = await connect()
         let user = await db.collection("user").findOne({email:email})
+        console.log("++++++++" + email)
         console.log("++++++++" + lozinka)
+        console.log("++++++++" + user.email)
+        console.log("++++++++" + user.lozinka)
         console.log("++++++++" + user)
 
         if(bcrypt.compare(lozinka, user.lozinka)){
@@ -46,11 +49,14 @@ export default {
                 algorithm : "HS512",
                 expiresIn: "1 week"
             }) 
+            
             return{
                token,
                email:user.email,
             }
+            
         }
+        
         else{
             throw new Error("cannot authenticate")
         }
@@ -73,7 +79,7 @@ export default {
         }
         catch(e){
            return res.status(401).send({Error: 'error'});
-
+           
         }
     }
 } 

@@ -20,14 +20,10 @@ app.get('/tajna', (req,res)=>{
     if (!ok){
         return;
     }
-    res.json({message: 'Ovo je tajna ' + req.jwt.email});
+    else{
+        res.json({message: 'Ovo je tajna ' + req.jwt.email});
+    }
 })
-
-app.get('/galerija',  (req, res) => {
-    res.send("rendom okej")
-  
-  })
-  
 
   app.post('/registracija', async (req, res) => {
     let db = await connect();
