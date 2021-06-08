@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import mongo from 'mongodb';
 import connect from './db.js';
 import bcrypt from 'bcrypt'
@@ -63,18 +66,17 @@ export default {
     },
     
 
-    verify(req, res){
+    verify(req, res, next){
         try{
             let authorization = req.headers.authorization.split(' ');
             let type = authorization[0];
             let token = authorization[1];
             if(type !== "Bearer"){
-                res.status(401).send();
-                return false;
+                return res.status(401).send();
             }
             else{
-                req.jwt =jwt.verify(token, 'tajna'/*process.env.JWT_SECRET*/);
-                return true;
+                req.jwt =jwt.verify(token, process.env.JWT_SECRET);
+                return next();
             }
         }
         catch(e){

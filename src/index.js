@@ -1,4 +1,3 @@
-
 import express, { response } from 'express';
 import data from './store';
 import cors from 'cors';
@@ -15,14 +14,8 @@ const port = 3000;
 app.use(cors()); // omoguciti cors na svim rutama
 app.use(express.json());
 
-app.get('/tajna', (req,res)=>{
-    let ok = auth.verify(req,res);
-    if (!ok){
-        return;
-    }
-    else{
-        res.json({message: 'Ovo je tajna ' + req.jwt.email});
-    }
+app.get('/tajna',  [auth.verify], (req,res) => {
+    res.json({message: "Ovo je tajna " + req.jwt.email})
 })
 
   app.post('/registracija', async (req, res) => {
