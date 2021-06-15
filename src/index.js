@@ -34,6 +34,41 @@ app.get('/tajna',  [auth.verify], (req,res) => {
         });
     }
 });
+/*app.get ('/galerija', async (req , res) => {
+    let galerija = req.body; 
+    let document = await db.collection("galerija").findOne({id})
+    res.send(galerija);
+});*/
+app.get('/galerija/:id', async (req , res) => {
+    let galId = req.params.galId;
+    let db = await connect();
+
+    let document = await db.collection("galerija").findOne({_id: mongo.ObjectId(galId)})
+    console.log(document)
+    res.json(document)
+});
+
+app.post ('/galerija', async (req , res) => {
+    let db = await connect();
+    let  galerija = req.body;
+
+    console.log(galerija)
+    let result = await db.collection('galerija').insertOne(galerija);
+    if (result.insertedCount == 1) {
+        res.send({
+            status: 'success',
+            id: result.insertedId,
+        });
+    } 
+    else {
+        res.send({
+            status: 'fail',
+        });
+    }
+    
+    console.log(result);
+});
+
 
 app.get('/registracija',  (req, res) => {
     let podaci = req.body; 
@@ -78,6 +113,7 @@ app.post('/auth', async (req, res) =>{
     }
     res.json({id:id});
 })
+
 /*
  app.patch("/user" , [auth.verify], async (req, res) =>{
     let changes = req.body;
