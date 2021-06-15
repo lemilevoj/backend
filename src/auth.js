@@ -37,16 +37,19 @@ export default {
     },
     
     async authenticateuser(email, lozinka){
+        
         let db = await connect()
         let user = await db.collection("user").findOne({email:email})
         console.log("++++++++" + email)
+        console.log("++++++++" + {email:email})
         console.log("++++++++" + lozinka)
         console.log("++++++++" + user.email)
         console.log("++++++++" + user.lozinka)
         console.log("++++++++" + user)
-
-        if(bcrypt.compare(lozinka, user.lozinka)){
-            console.log("---------")
+        console.log(user)
+        
+        if(bcrypt.compare(lozinka, user.lozinka)&&user.lozinka===lozinka){
+            console.log("----JA RADIM-----")
             delete user.lozinka
             let token = jwt.sign(user, "tajna", {
                 algorithm : "HS512",
@@ -57,11 +60,12 @@ export default {
                token,
                email:user.email,
             }
-            
         }
-        
+       
         else{
+            
             throw new Error("cannot authenticate")
+            
         }
     },
     
