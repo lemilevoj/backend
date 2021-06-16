@@ -34,19 +34,31 @@ app.get('/tajna',  [auth.verify], (req,res) => {
         });
     }
 });
-/*app.get ('/galerija', async (req , res) => {
-    let galerija = req.body; 
-    let document = await db.collection("galerija").findOne({id})
-    res.send(galerija);
-});*/
-app.get('/galerija/:id', async (req , res) => {
+app.get ('/galerija', async (req , res) => {
+    let id=req.params.id;
+    let db = await connect();
+    
+    /*let galerija = req.body; 
+    let document = await db.collection("galerija")
+   
+    req.send(document);*/
+    let posts = req.params;
+    res.send(posts);
+
+    let selekcija = {};
+    let results = await db.collection('galerija').find();
+
+    res.json(results);
+});
+
+/*app.get('/galerija/:id', async (req , res) => {
     let galId = req.params.galId;
     let db = await connect();
 
     let document = await db.collection("galerija").findOne({_id: mongo.ObjectId(galId)})
     console.log(document)
     res.json(document)
-});
+});*/
 
 app.post ('/galerija', async (req , res) => {
     let db = await connect();
@@ -69,12 +81,32 @@ app.post ('/galerija', async (req , res) => {
     console.log(result);
 });
 
+app.post ('/dogadaji', async (req , res) => {
+    let db = await connect();
+    let  dogadaji = req.body;
 
-app.get('/registracija',  (req, res) => {
+    console.log(dogadaji)
+    let result = await db.collection('dogadaji').insertOne(dogadaji);
+    if (result.insertedCount == 1) {
+        res.send({
+            status: 'success',
+            id: result.insertedId,
+        });
+    } 
+    else {
+        res.send({
+            status: 'fail',
+        });
+    }
+    
+    console.log(result);
+});
+
+/*app.get('/registracija',  (req, res) => {
     let podaci = req.body; 
 
     res.send(podaci);
-})
+})*/
 
 
 app.listen(port, () => console.log(`\n\nhttp://localhost:${port}/\n\n`));
