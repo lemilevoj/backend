@@ -51,7 +51,7 @@ export default {
         if(bcrypt.compare(lozinka, user.lozinka)&&user.lozinka===lozinka){
             console.log("----JA RADIM-----")
             delete user.lozinka
-            let token = jwt.sign(user, "tajna", {
+            let token = jwt.sign(user, process.env.JWT_SECRET, {
                 algorithm : "HS512",
                 expiresIn: "1 week"
             }) 

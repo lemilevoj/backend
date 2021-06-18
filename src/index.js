@@ -35,22 +35,21 @@ app.get('/tajna',  [auth.verify], (req,res) => {
     }
 });
 app.get ('/galerija', async (req , res) => {
-    let id=req.params.id;
     let db = await connect();
-    
-    /*let galerija = req.body; 
-    let document = await db.collection("galerija")
-   
-    req.send(document);*/
-    let posts = req.params;
-    res.send(posts);
-
-    let selekcija = {};
-    let results = await db.collection('galerija').find();
+    let cursor = await db.collection('galerija').find({});
+    let results = await cursor.toArray();
 
     res.json(results);
 });
 
+app.get ('/7wonders', async (req , res) => {
+    let db = await connect();
+  
+    let cursor = await db.collection('7wonders').find();
+    let results = await cursor.toArray();
+
+    res.json(results);
+});
 /*app.get('/galerija/:id', async (req , res) => {
     let galId = req.params.galId;
     let db = await connect();
@@ -65,7 +64,7 @@ app.post ('/galerija', async (req , res) => {
     let  galerija = req.body;
 
     console.log(galerija)
-    let result = await db.collection('galerija').insertOne(galerija);
+    let result = await db.collection('7wonders').insertOne(galerija);
     if (result.insertedCount == 1) {
         res.send({
             status: 'success',
@@ -81,12 +80,12 @@ app.post ('/galerija', async (req , res) => {
     console.log(result);
 });
 
-app.post ('/dogadaji', async (req , res) => {
+app.post ('/7wonders', async (req , res) => {
     let db = await connect();
     let  dogadaji = req.body;
 
     console.log(dogadaji)
-    let result = await db.collection('dogadaji').insertOne(dogadaji);
+    let result = await db.collection('7wonders').insertOne(dogadaji);
     if (result.insertedCount == 1) {
         res.send({
             status: 'success',
