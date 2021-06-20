@@ -1,5 +1,4 @@
 import express, { response } from 'express';
-import data from './store';
 import cors from 'cors';
 import connect from './db.js';
 import mongo from 'mongodb';
@@ -9,10 +8,12 @@ import auth from './auth.js';
 require('dotenv').config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(cors()); // omoguciti cors na svim rutama
 app.use(express.json());
+
+app.listen(port, function () { console.log(`\n\nhttp://localhost:${port}/\n\n`)});
 
 app.get('/tajna',  [auth.verify], (req,res) => {
     res.json({message: "Ovo je tajna " + req.jwt.email})
@@ -400,6 +401,7 @@ app.post ('/yugioh', async (req , res) => {
     console.log(result);
 });
 
+
 app.get ('/yugioh', async (req , res) => {
     let db = await connect();
   
@@ -409,7 +411,6 @@ app.get ('/yugioh', async (req , res) => {
     res.json(results);
 });
 
-app.listen(port, () => console.log(`\n\nhttp://localhost:${port}/\n\n`));
 
 
 app.post('/user', async (req , res) =>{
