@@ -11,12 +11,15 @@ import auth from './auth.js';
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
 
 app.use(cors()); // omoguciti cors na svim rutama
 app.use(express.json());
 
-app.listen(port, function () { console.log(`\n\nhttp://localhost:${port}/\n\n`)});
+const port = process.env.PORT || 3000;
+
+app.listen(port, function () {
+     console.log("Server se slusa na portu",port);
+});
 
 app.get('/tajna',  [auth.verify], (req,res) => {
     res.json({message: "Ovo je tajna " + req.jwt.email})
