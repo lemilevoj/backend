@@ -1,4 +1,5 @@
 import express, { response } from 'express';
+import data from './store';
 import cors from 'cors';
 import connect from './db.js';
 import mongo from 'mongodb';
@@ -9,14 +10,22 @@ require('dotenv').config();
 
 const app = express();
 
+
 app.use(cors()); // omoguciti cors na svim rutama
 app.use(express.json());
 
+if(process.env.NODE_ENV === 'production') {
+    
+    app.use(express.static(__dirname + '/public/'));
+
+    app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
+}
+
+
 const port = process.env.PORT || 3000;
 
-app.listen(port, function () {
-     console.log("Server se slusa na portu",port);
-});
+
+app.listen(port, () => console.log(`\n\nhttp://localhost:${port}/\n\n`));
 
 app.get('/tajna',  [auth.verify], (req,res) => {
     res.json({message: "Ovo je tajna " + req.jwt.email})
@@ -404,7 +413,6 @@ app.post ('/yugioh', async (req , res) => {
     console.log(result);
 });
 
-
 app.get ('/yugioh', async (req , res) => {
     let db = await connect();
   
@@ -413,6 +421,7 @@ app.get ('/yugioh', async (req , res) => {
 
     res.json(results);
 });
+
 
 
 

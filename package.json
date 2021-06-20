@@ -2,14 +2,11 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "FiguriX",
-  "main": "src/index.js",
-  "enginess": {
-    "node": "14.x"
-  },
+  "main": "index.js",
   "scripts": {
     "serve": "nodemon --exec babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+    "start": "babel-node src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,16 +16,15 @@
     "dotenv": "^9.0.2",
     "express": "^4.17.1",
     "import": "0.0.6",
-    "jquery": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.6",
     "store": "^2.0.12",
-    "vue-store": "^0.3.1-moved"
+    "vue-store": "^0.3.1-moved",
+    "@babel/core": "^7.13.15",
+    "@babel/node": "^7.13.13",
+    "@babel/preset-env": "^7.13.15"
   },
   "devDependencies": {
-    "@babel/core": "^7.13.16",
-    "@babel/node": "^7.13.13",
-    "@babel/preset-env": "^7.13.15",
     "nodemon": "^2.0.7"
   }
 }
